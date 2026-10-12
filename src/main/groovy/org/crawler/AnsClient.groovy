@@ -21,12 +21,23 @@ class AnsClient {
     }
 
     String findLink(Document doc, String textoDoLink) {
-        def link = doc.select('a[href]').find { it.text().contains(textoDoLink) }
+        String procurado = normalizar(textoDoLink)
+        def link = doc.select('a[href]').find { normalizar(it.text()).contains(procurado) }
 
         if (link == null) {
             throw new IllegalStateException("Link não encontrado: '${textoDoLink}'")
         }
         return link.absUrl('href')
+    }
+
+    static String normalizar(String texto) {
+        String semAcento = java.text.Normalizer
+                .normalize(texto, java.text.Normalizer.Form.NFD)
+                .replaceAll('\\p{M}', '')
+        return semAcento.replace('\u00a0', ' ')
+                .replaceAll('\\s+', ' ')
+                .trim()
+                .toLowerCase()
     }
 
     File download(String url, File pasta) {

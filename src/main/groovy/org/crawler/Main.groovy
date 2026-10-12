@@ -33,5 +33,22 @@ class Main {
 
         println "Salvo em: ${arquivo.absolutePath}"
         println "Tamanho: ${arquivo.length()} bytes"
+
+        String urlHistorico = client.findLink(paginaTiss, 'todas as versões dos Componentes')
+        def paginaHistorico = client.fetch(urlHistorico)
+
+        List<TissHistoryEntry> historico = TissHistory.parse(paginaHistorico)
+        File csv = new File('Downloads/historico_versoes_tiss.csv')
+        TissHistory.writeCsv(historico, csv)
+
+        println "Task 2: ${historico.size()} versões a partir de jan/2016 -> ${csv.absolutePath}"
+
+        String urlTabelas = client.findLink(paginaTiss, 'acessar as planilhas')
+        def paginaTabelas = client.fetch(urlTabelas)
+
+        String urlErros = client.findLink(paginaTabelas, 'Tabela de erros no envio para a ANS')
+        File erros = client.download(urlErros, new File('Downloads/Tabelas_relacionadas'))
+
+        println "Task 3: ${erros.absolutePath} (${erros.length()} bytes)"
     }
 }
