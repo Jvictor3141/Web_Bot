@@ -16,5 +16,9 @@ class Main {
 
         def paginaTiss = client.fetch(urlTiss)
         println "Título: ${paginaTiss.title()}"
+
+        def versao = TissVersion.findLatest(paginaTiss)
+        println "Versão mais recente: ${versao.rotulo}"
+        println "URL: ${versao.url}"
     }
 }
