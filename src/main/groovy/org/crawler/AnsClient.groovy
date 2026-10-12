@@ -28,4 +28,24 @@ class AnsClient {
         }
         return link.absUrl('href')
     }
+
+    File download(String url, File pasta) {
+        pasta.mkdirs()
+        File destino = new File(pasta, fileNameFromUrl(url))
+
+        def http = new HTTPBuilder(url)
+        http.headers = ['User-Agent': USER_AGENT]
+
+        http.get(contentType: ContentType.BINARY) { resp, inputStream ->
+            destino.withOutputStream { saida -> saida << inputStream}
+        }
+
+        return destino
+    }
+
+    static String fileNameFromUrl(String url) {
+        String limpa = url.replaceAll('[?#].*$', '').replaceAll('/@@download/file$', '')
+        String nome = limpa.substring(limpa.lastIndexOf('/') + 1)
+        return URLDecoder.decode(nome, 'UTF-8')
+    }
 }
