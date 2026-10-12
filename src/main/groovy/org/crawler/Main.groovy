@@ -31,6 +31,7 @@ class Main {
         File pasta = new File('Downloads/Aquivos_padrao_TISS')
         File arquivo = client.download(comunicacao.url, pasta)
 
+        println "Task 1"
         println "Salvo em: ${arquivo.absolutePath}"
         println "Tamanho: ${arquivo.length()} bytes"
 
